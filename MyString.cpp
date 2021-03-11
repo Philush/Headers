@@ -37,7 +37,9 @@ void strCat(char* dest, const char* source) // объединяет две ст�
 
 void strReverse(char* str) // разворот строки в обратную сторону
 {
-	char* StrReverse = new char;
+		
+	char StrReverse[20] = {};
+
 	strCpy(StrReverse, str);
 
 	int i = strLen(str) - 1;
@@ -49,45 +51,28 @@ void strReverse(char* str) // разворот строки в обратную 
 		j++;
 	}
 
-	delete StrReverse;
 }
 
 void strToUpper(char* str) // все символы представить в верхнем регистре
 {
-	char strUp[27]{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
-	char strLow[27]{ "abcdefghijklmnopqrstuvwxyz" };
-	int len = strLen(strUp);
-
 	do
 	{
-		for (int i = 0; i < 27; i++)
+		if ((int)(*str) >= 97 && (int)(*str) <= 122)
 		{
-			if (str[0] == strLow[i])
-			{
-				str[0] = strUp[i];
-			}
+			*str -= 32;
 		}
-
 	} while (*str++);
 }
 
 void strToLower(char* str) // в нижнем
 {
-	char strUp[27]{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
-	char strLow[27]{ "abcdefghijklmnopqrstuvwxyz" };
-	int len = strLen(strUp);
-
 	do
 	{
-		for (int i = 0; i < 27; i++)
+		if ((int)(*str) >= 65 && (int)(*str) <= 90)
 		{
-			if (str[0] == strUp[i])
-			{
-				str[0] = strLow[i];
-			}
+			*str += 32;
 		}
-
-	} while (*str++);
+	} while (*str++);(*str++);
 }
 
 int strStr(const char* str, const char* substr) // возвращает индекс первого вхождения подстроки substr в str, если вхождений нет, то -1
@@ -129,22 +114,40 @@ int strStr(const char* str, const char* substr) // возвращает инде
 
 int strCmp(const char* str1, const char* str2) // возвращает 0, если равны, 1, если первая больше, -1 если вторая больше.
 {
+	/*По порядку, от начала строки сравниваются коды символов.
+	s1 < s2, если при первом несовпадении символов c1 < c2;
+	s1 == s2, если все символы совпадают;
+	s1 > s2, если при первом несовпадении символов c1 > c2;
+	Если все символы совпадают, но одна из строк закончилась, то больше та строка, в которой символов больше.*/
+	
 	int lenStr1 = strLen(str1);
 	int lenStr2 = strLen(str2);
 
 	if (lenStr1 > lenStr2)
 	{
+		do
+		{
+			return *str1 > * str2 ? 1 : -1;
+		} while ((*str1++) && (*str2++));
 		return 1;
 	}
+
 	if (lenStr1 < lenStr2)
 	{
+		do
+		{
+			return *str1 > * str2 ? 1 : -1;
+		} while ((*str1++) && (*str2++));
 		return -1;
 	}
 
-	for (int i = 0; i < lenStr1; i++)
+	if (lenStr1 == lenStr2)
 	{
-		return (int)(str1[i]) > (int)(str2[i]) ? 1 : -1;
+		do
+		{
+			return *str1 > *str2 ? 1 : -1;
+		} while ((*str1++) && (*str2++));
+		return 0;
 	}
-
-	return 0;
+	
 }
